@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Collection from './pages/Collection';
-import Candles from './pages/Candles';
 import Admin from './pages/Admin';
 import Cart from './components/Cart';
 import Search from './components/Search';
@@ -23,7 +22,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/collection" element={<Collection />} />
-              <Route path="/candles" element={<Candles />} />
               <Route path="/admin" element={<Admin />} />
             </Routes>
           </main>
