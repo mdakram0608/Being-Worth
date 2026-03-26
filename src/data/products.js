@@ -1,10 +1,90 @@
 export const products = [
-  { id: 1, name: "BEING WORTH", type: "Eau de Parfum", price: 4500, formattedPrice: "4,500.00", image: "/bottle.png" },
-  { id: 2, name: "MIDNIGHT OUD", type: "Eau de Parfum", price: 5200, formattedPrice: "5,200.00", image: "/bottle.png" },
-  { id: 3, name: "VELVET ROSE", type: "Eau de Parfum", price: 4800, formattedPrice: "4,800.00", image: "/bottle.png" },
-  { id: 4, name: "NEROLI BREEZE", type: "Eau de Toilette", price: 3500, formattedPrice: "3,500.00", image: "/bottle.png" },
-  { id: 5, name: "AMBER WOOD", type: "Eau de Parfum", price: 5500, formattedPrice: "5,500.00", image: "/bottle.png" },
-  { id: 6, name: "VANILLA MUSK", type: "Eau de Parfum", price: 4200, formattedPrice: "4,200.00", image: "/bottle.png" },
-  { id: 7, name: "SANTAL SOLSTICE", type: "Eau de Parfum", price: 4900, formattedPrice: "4,900.00", image: "/bottle.png" },
-  { id: 8, name: "BERGAMOT BLOOM", type: "Eau de Toilette", price: 3800, formattedPrice: "3,800.00", image: "/bottle.png" }
+  {
+    id: 1,
+    name: "BEING WORTH",
+    type: "Eau de Parfum",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1200, image: "/bottle-8ml.png" },
+      { ml: 20, price: 2800, image: "/bottle-20ml.png" },
+      { ml: 50, price: 4500, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 2,
+    name: "MIDNIGHT OUD",
+    type: "Eau de Parfum",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1400, image: "/bottle-8ml.png" },
+      { ml: 20, price: 3200, image: "/bottle-20ml.png" },
+      { ml: 50, price: 5200, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 3,
+    name: "VELVET ROSE",
+    type: "Eau de Parfum",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1300, image: "/bottle-8ml.png" },
+      { ml: 20, price: 3000, image: "/bottle-20ml.png" },
+      { ml: 50, price: 4800, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 4,
+    name: "NEROLI BREEZE",
+    type: "Eau de Toilette",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 900, image: "/bottle-8ml.png" },
+      { ml: 20, price: 2200, image: "/bottle-20ml.png" },
+      { ml: 50, price: 3500, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 5,
+    name: "AMBER WOOD",
+    type: "Eau de Parfum",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1500, image: "/bottle-8ml.png" },
+      { ml: 20, price: 3400, image: "/bottle-20ml.png" },
+      { ml: 50, price: 5500, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 6,
+    name: "VANILLA MUSK",
+    type: "Eau de Parfum",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1100, image: "/bottle-8ml.png" },
+      { ml: 20, price: 2600, image: "/bottle-20ml.png" },
+      { ml: 50, price: 4200, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 7,
+    name: "SANTAL SOLSTICE",
+    type: "Eau de Parfum",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1350, image: "/bottle-8ml.png" },
+      { ml: 20, price: 3100, image: "/bottle-20ml.png" },
+      { ml: 50, price: 4900, image: "/bottle.png" },
+    ],
+  },
+  {
+    id: 8,
+    name: "BERGAMOT BLOOM",
+    type: "Eau de Toilette",
+    image: "/bottle.png",
+    sizes: [
+      { ml: 8, price: 1000, image: "/bottle-8ml.png" },
+      { ml: 20, price: 2400, image: "/bottle-20ml.png" },
+      { ml: 50, price: 3800, image: "/bottle.png" },
+    ],
+  },
 ];

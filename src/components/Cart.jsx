@@ -130,7 +130,9 @@ const Cart = () => {
                           <X size={16} />
                         </button>
                       </div>
-                      <p style={{ fontSize: '0.75rem', color: 'var(--gray-dark)', marginTop: '4px' }}>{item.type}</p>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--gray-dark)', marginTop: '4px' }}>
+                        {item.type}{item.size ? ` · ${item.size}` : ''}
+                      </p>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <div style={{

@@ -8,17 +8,22 @@ const Admin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
-  // Form State
+  // Form State — text fields
   const [name, setName] = useState('');
   const [type, setType] = useState('Eau de Parfum');
-  const [price, setPrice] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
+  const [price8, setPrice8] = useState('');
+  const [price20, setPrice20] = useState('');
+  const [price50, setPrice50] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // Per-size image state: { file, preview }
+  const [imgs, setImgs] = useState({
+    '8ml':  { file: null, preview: '' },
+    '20ml': { file: null, preview: '' },
+    '50ml': { file: null, preview: '' },
+  });
+
+  useEffect(() => { fetchProducts(); }, []);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -26,17 +31,25 @@ const Admin = () => {
       .from('products')
       .select('*')
       .order('created_at', { ascending: false });
-      
     if (error) {
-      console.error("Error fetching products:", error);
-      // Fallback for initial setup before table exists
-      if (error.code === '42P01') {
-         alert("Warning: The 'products' table doesn't exist in Supabase yet. Please create it first.");
-      }
+      console.error('Error fetching products:', error);
+      if (error.code === '42P01') alert("Warning: The 'products' table doesn't exist in Supabase yet.");
     } else {
       setProducts(data || []);
     }
     setLoading(false);
+  };
+
+  const resetForm = () => {
+    setEditingId(null);
+    setName('');
+    setType('Eau de Parfum');
+    setPrice8(''); setPrice20(''); setPrice50('');
+    setImgs({
+      '8ml':  { file: null, preview: '' },
+      '20ml': { file: null, preview: '' },
+      '50ml': { file: null, preview: '' },
+    });
   };
 
   const handleOpenModal = (product = null) => {
@@ -44,52 +57,37 @@ const Admin = () => {
       setEditingId(product.id);
       setName(product.name);
       setType(product.type);
-      setPrice(product.price.toString());
-      setImagePreview(product.image);
-      setImageFile(null);
+      setPrice8((product.price_8ml ?? '').toString());
+      setPrice20((product.price_20ml ?? '').toString());
+      setPrice50((product.price_50ml ?? product.price ?? '').toString());
+      setImgs({
+        '8ml':  { file: null, preview: product.image_8ml  || product.image || '' },
+        '20ml': { file: null, preview: product.image_20ml || product.image || '' },
+        '50ml': { file: null, preview: product.image_50ml || product.image || '' },
+      });
     } else {
-      setEditingId(null);
-      setName('');
-      setType('Eau de Parfum');
-      setPrice('');
-      setImagePreview('');
-      setImageFile(null);
+      resetForm();
     }
     setIsModalOpen(true);
   };
-  
-  const handleImageChange = (e) => {
+
+  const handleImageChange = (size, e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+      setImgs(prev => ({
+        ...prev,
+        [size]: { file, preview: URL.createObjectURL(file) },
+      }));
     }
   };
 
-  const uploadImage = async () => {
-    if (!imageFile) return imagePreview; // Keep existing image if no new file
-    
-    setUploading(true);
-    const fileExt = imageFile.name.split('.').pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `product-images/${fileName}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('product-images')
-      .upload(filePath, imageFile);
-
-    if (uploadError) {
-      console.error('Error uploading image:', uploadError);
-      alert('Error uploading image: ' + uploadError.message);
-      setUploading(false);
-      throw uploadError;
-    }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('product-images')
-      .getPublicUrl(filePath);
-
-    setUploading(false);
+  // Upload a single image file, return public URL
+  const uploadSingleImage = async (file) => {
+    const fileExt = file.name.split('.').pop();
+    const filePath = `product-images/${Math.random()}.${fileExt}`;
+    const { error } = await supabase.storage.from('product-images').upload(filePath, file);
+    if (error) throw error;
+    const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(filePath);
     return publicUrl;
   };
 
@@ -98,52 +96,56 @@ const Admin = () => {
     setUploading(true);
 
     try {
-      // 1. Upload new image if provided
-      let finalImageUrl = imagePreview; // default to existing
-      
-      if (imageFile) {
-        finalImageUrl = await uploadImage();
-      } else if (!editingId && !imageFile) {
-         // If new product and no image, fallback to placeholder
-         finalImageUrl = '/bottle.png';
+      // Upload each size image if a new file was selected, otherwise keep existing url
+      const urls = {};
+      for (const size of ['8ml', '20ml', '50ml']) {
+        const { file, preview } = imgs[size];
+        if (file) {
+          urls[size] = await uploadSingleImage(file);
+        } else {
+          urls[size] = preview || null;
+        }
       }
 
+      // Use 50ml image as canonical product image (fallback chain)
+      const canonicalImage = urls['50ml'] || urls['20ml'] || urls['8ml'] || '/bottle.png';
+
+      const p8  = Number(price8)  || 0;
+      const p20 = Number(price20) || 0;
+      const p50 = Number(price50) || 0;
+      const basePrice = p50 || p20 || p8;
       const formattedPriceStr = new Intl.NumberFormat('en-IN', {
-         minimumFractionDigits: 2,
-         maximumFractionDigits: 2
-      }).format(Number(price));
+        minimumFractionDigits: 2, maximumFractionDigits: 2,
+      }).format(basePrice);
 
       const productData = {
         name,
         type,
-        price: Number(price),
+        price: basePrice,
         formattedPrice: formattedPriceStr,
-        image: finalImageUrl
+        price_8ml:  p8,
+        price_20ml: p20,
+        price_50ml: p50,
+        image:      canonicalImage,
+        image_8ml:  urls['8ml'],
+        image_20ml: urls['20ml'],
+        image_50ml: urls['50ml'],
       };
 
       if (editingId) {
-        // UPDATE
-        const { error } = await supabase
-          .from('products')
-          .update(productData)
-          .eq('id', editingId);
-          
+        const { error } = await supabase.from('products').update(productData).eq('id', editingId);
         if (error) throw error;
       } else {
-        // INSERT
-        const { error } = await supabase
-          .from('products')
-          .insert([productData]);
-          
+        const { error } = await supabase.from('products').insert([productData]);
         if (error) throw error;
       }
 
       setIsModalOpen(false);
-      fetchProducts(); // Refresh list
+      fetchProducts();
 
     } catch (error) {
-      console.error("Error saving product:", error);
-      alert("Error saving product: " + error.message);
+      console.error('Error saving product:', error);
+      alert('Error saving product: ' + error.message);
     } finally {
       setUploading(false);
     }
@@ -152,31 +154,66 @@ const Admin = () => {
   const handleDelete = async (id, imageUrl) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        // Delete from database
-        const { error: dbError } = await supabase
-          .from('products')
-          .delete()
-          .eq('id', id);
-
+        const { error: dbError } = await supabase.from('products').delete().eq('id', id);
         if (dbError) throw dbError;
-
-        // Try to delete image from storage if it's not a generic placeholder
         if (imageUrl && imageUrl.includes('supabase') && imageUrl.includes('product-images')) {
-           const imagePath = imageUrl.split('product-images/')[1]; // extract path after bucket name
-           if (imagePath) {
-             const { error: storageError } = await supabase.storage
-               .from('product-images')
-               .remove([imagePath]);
-             if(storageError) console.error("Could not delete image, but product is removed:", storageError);
-           }
+          const imagePath = imageUrl.split('product-images/')[1];
+          if (imagePath) {
+            await supabase.storage.from('product-images').remove([imagePath]);
+          }
         }
-
         fetchProducts();
       } catch (error) {
-        console.error("Error deleting product:", error);
-        alert("Error deleting product.");
+        console.error('Error deleting product:', error);
+        alert('Error deleting product.');
       }
     }
+  };
+
+  // Reusable image uploader slot
+  const ImageSlot = ({ size, label }) => {
+    const { preview } = imgs[size];
+    return (
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <span style={{ fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gray-dark)' }}>
+          {label}
+        </span>
+        <label style={{
+          border: preview ? '1.5px solid var(--secondary)' : '1px dashed var(--gray-dark)',
+          height: '120px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          backgroundColor: 'var(--gray-light)',
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'border-color 0.2s',
+        }}>
+          {preview ? (
+            <img src={preview} alt={label} style={{ height: '100%', width: '100%', objectFit: 'contain', mixBlendMode: 'multiply', padding: '8px' }} />
+          ) : (
+            <>
+              <ImageIcon size={24} color="var(--gray-dark)" style={{ marginBottom: '6px' }} />
+              <span style={{ fontSize: '0.72rem', color: 'var(--gray-dark)', textAlign: 'center', padding: '0 8px' }}>
+                Upload {label}
+              </span>
+            </>
+          )}
+          <input type="file" accept="image/*" onChange={e => handleImageChange(size, e)} style={{ display: 'none' }} />
+        </label>
+        {preview && (
+          <button
+            type="button"
+            onClick={() => setImgs(prev => ({ ...prev, [size]: { file: null, preview: '' } }))}
+            style={{ fontSize: '0.65rem', color: '#ff4444', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'center' }}
+          >
+            Remove
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -251,14 +288,16 @@ const Admin = () => {
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, 
           backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1000,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px'
+          overflowY: 'auto',
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px'
         }}>
           <div style={{
-             backgroundColor: 'var(--primary)',
-             width: '100%',
-             maxWidth: '500px',
-             padding: '32px',
-             position: 'relative'
+            backgroundColor: 'var(--primary)',
+            width: '100%',
+            maxWidth: '560px',
+            padding: '32px',
+            position: 'relative',
+            margin: 'auto',
           }}>
             <button 
               onClick={() => setIsModalOpen(false)}
@@ -270,56 +309,21 @@ const Admin = () => {
               {editingId ? 'EDIT PRODUCT' : 'ADD NEW PRODUCT'}
             </h2>
 
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              
-              {/* Image Uploader */}
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+
+              {/* Name */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Product Image</label>
-                <label style={{
-                  border: '1px dashed var(--gray-dark)',
-                  height: '150px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  backgroundColor: 'var(--gray-light)',
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}>
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" style={{ height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-                  ) : (
-                    <>
-                      <ImageIcon size={32} color="var(--gray-dark)" style={{ marginBottom: '8px' }} />
-                      <span style={{ fontSize: '0.85rem', color: 'var(--gray-dark)' }}>Click to upload image</span>
-                    </>
-                  )}
-                  <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
-                </label>
+                <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</label>
+                <input required type="text" value={name} onChange={e => setName(e.target.value)}
+                  style={{ padding: '12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit' }}
+                  placeholder="e.g. BEING WORTH"
+                />
               </div>
 
-              {/* Form Fields */}
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</label>
-                  <input required type="text" value={name} onChange={(e) => setName(e.target.value)}
-                    style={{ padding: '12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit' }}
-                    placeholder="e.g. BEING WORTH"
-                  />
-                </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Price (₹)</label>
-                  <input required type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
-                    style={{ padding: '12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit' }}
-                    placeholder="4500"
-                  />
-                </div>
-              </div>
-
+              {/* Type */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type</label>
-                <select value={type} onChange={(e) => setType(e.target.value)}
+                <select value={type} onChange={e => setType(e.target.value)}
                   style={{ padding: '12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit', backgroundColor: 'var(--primary)' }}
                 >
                   <option value="Eau de Parfum">Eau de Parfum</option>
@@ -328,11 +332,43 @@ const Admin = () => {
                 </select>
               </div>
 
+              {/* Per-size images */}
+              <div>
+                <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '12px' }}>
+                  Bottle Images — per size
+                </label>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <ImageSlot size="8ml"  label="8ml"  />
+                  <ImageSlot size="20ml" label="20ml" />
+                  <ImageSlot size="50ml" label="50ml" />
+                </div>
+              </div>
+
+              {/* Per-size pricing */}
+              <div>
+                <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '10px' }}>
+                  Prices (₹) — per size
+                </label>
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  {[['8ml', price8, setPrice8], ['20ml', price20, setPrice20], ['50ml', price50, setPrice50]].map(([label, val, setter]) => (
+                    <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--gray-dark)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
+                      <input
+                        type="number" min="0" step="1" value={val}
+                        onChange={e => setter(e.target.value)}
+                        style={{ padding: '10px 12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit', width: '100%', boxSizing: 'border-box' }}
+                        placeholder={label === '8ml' ? '1200' : label === '20ml' ? '2800' : '4500'}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               <button 
                 type="submit" 
                 className="luxury-btn" 
                 disabled={uploading}
-                style={{ marginTop: '16px', opacity: uploading ? 0.7 : 1, display: 'flex', justifyContent: 'center', gap: '8px' }}
+                style={{ marginTop: '8px', opacity: uploading ? 0.7 : 1, display: 'flex', justifyContent: 'center', gap: '8px' }}
               >
                 {uploading ? (
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
