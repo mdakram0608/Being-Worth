@@ -87,6 +87,116 @@ const Home = () => {
         </div>
       </section>
 
+      {/* OUR STORY */}
+      <section style={{ padding: '120px 24px', borderTop: '1px solid var(--gray-light)' }}>
+        <div className="container" style={{ maxWidth: '1100px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.6fr)',
+            gap: '80px',
+            alignItems: 'start',
+          }} className="story-grid">
+
+            {/* Left — decorative label + big heading */}
+            <div style={{ position: 'sticky', top: '120px' }}>
+              <p style={{
+                fontSize: '0.75rem',
+                letterSpacing: '0.25em',
+                textTransform: 'uppercase',
+                color: 'var(--gray-dark)',
+                marginBottom: '20px',
+              }}>
+                Our Story
+              </p>
+              <h2 style={{
+                fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+                fontWeight: 300,
+                letterSpacing: '0.05em',
+                lineHeight: 1.05,
+                color: 'var(--secondary)',
+              }}>
+                BEING<br />WORTH
+              </h2>
+              <div style={{
+                width: '40px',
+                height: '1px',
+                backgroundColor: 'var(--secondary)',
+                marginTop: '32px',
+              }} />
+            </div>
+
+            {/* Right — story text */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+              <p style={{
+                fontSize: '1.25rem',
+                fontWeight: 300,
+                lineHeight: 1.75,
+                letterSpacing: '0.01em',
+                color: 'var(--secondary)',
+              }}>
+                BEING WORTH began with a question —<br />
+                <em>Why should luxury feel out of reach?</em>
+              </p>
+
+              <p style={{ fontSize: '1rem', fontWeight: 300, lineHeight: 1.9, color: '#444' }}>
+                As someone who always valued presentation, confidence, and identity, I saw a gap.
+                Fragrances that felt premium were either too expensive, or lacked soul.
+              </p>
+
+              <p style={{ fontSize: '1rem', fontWeight: 300, lineHeight: 1.9, color: '#444' }}>
+                So I built something different. A brand where every bottle represents confidence.
+                A brand that allows you to experience luxury without compromise.
+              </p>
+
+              <p style={{ fontSize: '1rem', fontWeight: 300, lineHeight: 1.9, color: '#444' }}>
+                Starting small, focusing on quality, and building with intention — BEING WORTH is more than a business.
+                It's a mindset.
+              </p>
+
+              {/* Pull quote */}
+              <blockquote style={{
+                borderLeft: '2px solid var(--secondary)',
+                paddingLeft: '24px',
+                margin: '12px 0',
+              }}>
+                <p style={{
+                  fontSize: '1.05rem',
+                  fontWeight: 300,
+                  lineHeight: 1.8,
+                  fontStyle: 'italic',
+                  color: 'var(--secondary)',
+                }}>
+                  "Because in the end, it's not just about how you smell.<br />
+                  It's about how you show up in the world."
+                </p>
+              </blockquote>
+
+              <p style={{
+                fontSize: '1rem',
+                fontWeight: 400,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--secondary)',
+              }}>
+                And that… is BEING WORTH.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          @media (max-width: 700px) {
+            .story-grid {
+              grid-template-columns: 1fr !important;
+              gap: 40px !important;
+            }
+            .story-grid > div:first-child {
+              position: static !important;
+            }
+          }
+        `}</style>
+      </section>
+
       <section style={{
         backgroundColor: 'var(--secondary)',
         color: 'var(--primary)',
