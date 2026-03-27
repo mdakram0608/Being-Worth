@@ -35,7 +35,7 @@ const Footer = () => {
               <Link to="/collection" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>All Perfumes</Link>
             </li>
             <li>
-              <Link to="/candles" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>Candles (Coming Soon)</Link>
+              <Link to="/soaps" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>Soaps (Coming Soon)</Link>
             </li>
           </ul>
         </div>
@@ -44,7 +44,7 @@ const Footer = () => {
           <h4 style={{ fontSize: '0.85rem', marginBottom: '24px', letterSpacing: '0.1em' }}>SUPPORT</h4>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <li><a href="#" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>Contact Us</a></li>
-            <li><a href="#" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>Shipping & Returns</a></li>
+            <li><Link to="/terms" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>Terms & Conditions</Link></li>
             <li><a href="#" style={{ color: 'var(--gray-dark)', fontSize: '0.9rem' }}>FAQ</a></li>
           </ul>
         </div>
@@ -63,8 +63,8 @@ const Footer = () => {
           &copy; {new Date().getFullYear()} BEING WORTH. ALL RIGHTS RESERVED.
         </p>
         <div style={{ display: 'flex', gap: '24px' }}>
-          <a href="#" style={{ color: 'var(--gray-dark)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Instagram</a>
-          <a href="#" style={{ color: 'var(--gray-dark)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Facebook</a>
+          <a href="https://www.instagram.com/beingworth.official" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gray-dark)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Instagram</a>
+          <a href="https://www.facebook.com/share/18dve85ie7/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gray-dark)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Facebook</a>
         </div>
       </div>
     </footer>

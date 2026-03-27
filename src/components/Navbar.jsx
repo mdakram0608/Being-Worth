@@ -28,6 +28,7 @@ const Navbar = () => {
           
           <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }} className="nav-links">
              <Link to="/collection" style={{ textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.1em' }}>Collection</Link>
+             <Link to="/soaps" style={{ textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.1em' }}>Soaps</Link>
           </div>
         </div>
         

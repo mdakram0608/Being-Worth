@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search as SearchIcon, X, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import ProductCard from './ProductCard';
 import { supabase } from '../config/supabaseClient';
 
 const Search = () => {
@@ -115,31 +116,9 @@ const Search = () => {
            ) : (
              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '32px' }}>
                 {filteredProducts.map(product => (
-                  <Link 
-                    key={product.id} 
-                    to="/collection"
-                    onClick={() => setIsSearchOpen(false)}
-                    style={{ display: 'block', textAlign: 'center', textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <div style={{
-                       backgroundColor: 'var(--gray-light)',
-                       padding: '10%',
-                       marginBottom: '16px',
-                       aspectRatio: '3/4',
-                       display: 'flex',
-                       alignItems: 'center',
-                       justifyContent: 'center'
-                    }}>
-                       <img 
-                          src={product.image} 
-                          alt={product.name} 
-                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }}
-                       />
-                    </div>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--gray-dark)', marginBottom: '4px' }}>{product.type}</p>
-                    <h3 style={{ fontSize: '1rem', fontWeight: 300, marginBottom: '4px' }}>{product.name}</h3>
-                    <p style={{ fontSize: '0.9rem' }}>₹{product.formattedPrice}</p>
-                  </Link>
+                  <div key={product.id} onClick={() => setIsSearchOpen(false)}>
+                    <ProductCard {...product} />
+                  </div>
                 ))}
              </div>
            )}

@@ -4,6 +4,8 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import Collection from './pages/Collection';
 import Admin from './pages/Admin';
+import Terms from './pages/Terms';
+import Soaps from './pages/Soaps';
 import Cart from './components/Cart';
 import Search from './components/Search';
 import { CartProvider } from './context/CartContext';
@@ -23,6 +25,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/collection" element={<Collection />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/soaps" element={<Soaps />} />
             </Routes>
           </main>
           <Footer />
