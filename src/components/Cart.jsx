@@ -20,7 +20,7 @@ const Cart = () => {
 
     // TO DO: Replace with the actual WhatsApp number when available
     // Format: '91XXXXXXXXXX' (Country code + number without +, spaces or dashes)
-    const phoneNumber = "YOUR_WHATSAPP_NUMBER_HERE"; 
+    const phoneNumber = "917092144594";
     
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappUrl, '_blank');
