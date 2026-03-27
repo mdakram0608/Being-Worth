@@ -14,13 +14,15 @@ const Admin = () => {
   const [price8, setPrice8] = useState('');
   const [price20, setPrice20] = useState('');
   const [price50, setPrice50] = useState('');
+  const [price100, setPrice100] = useState('');
   const [uploading, setUploading] = useState(false);
 
   // Per-size image state: { file, preview }
   const [imgs, setImgs] = useState({
-    '8ml':  { file: null, preview: '' },
-    '20ml': { file: null, preview: '' },
-    '50ml': { file: null, preview: '' },
+    '8ml':   { file: null, preview: '' },
+    '20ml':  { file: null, preview: '' },
+    '50ml':  { file: null, preview: '' },
+    '100ml': { file: null, preview: '' },
   });
 
   useEffect(() => { fetchProducts(); }, []);
@@ -44,11 +46,12 @@ const Admin = () => {
     setEditingId(null);
     setName('');
     setType('Eau de Parfum');
-    setPrice8(''); setPrice20(''); setPrice50('');
+    setPrice8(''); setPrice20(''); setPrice50(''); setPrice100('');
     setImgs({
-      '8ml':  { file: null, preview: '' },
-      '20ml': { file: null, preview: '' },
-      '50ml': { file: null, preview: '' },
+      '8ml':   { file: null, preview: '' },
+      '20ml':  { file: null, preview: '' },
+      '50ml':  { file: null, preview: '' },
+      '100ml': { file: null, preview: '' },
     });
   };
 
@@ -60,10 +63,12 @@ const Admin = () => {
       setPrice8((product.price_8ml ?? '').toString());
       setPrice20((product.price_20ml ?? '').toString());
       setPrice50((product.price_50ml ?? product.price ?? '').toString());
+      setPrice100((product.price_100ml ?? '').toString());
       setImgs({
-        '8ml':  { file: null, preview: product.image_8ml  || product.image || '' },
-        '20ml': { file: null, preview: product.image_20ml || product.image || '' },
-        '50ml': { file: null, preview: product.image_50ml || product.image || '' },
+        '8ml':   { file: null, preview: product.image_8ml   || product.image || '' },
+        '20ml':  { file: null, preview: product.image_20ml  || product.image || '' },
+        '50ml':  { file: null, preview: product.image_50ml  || product.image || '' },
+        '100ml': { file: null, preview: product.image_100ml || product.image || '' },
       });
     } else {
       resetForm();
@@ -98,7 +103,7 @@ const Admin = () => {
     try {
       // Upload each size image if a new file was selected, otherwise keep existing url
       const urls = {};
-      for (const size of ['8ml', '20ml', '50ml']) {
+      for (const size of ['8ml', '20ml', '50ml', '100ml']) {
         const { file, preview } = imgs[size];
         if (file) {
           urls[size] = await uploadSingleImage(file);
@@ -107,13 +112,14 @@ const Admin = () => {
         }
       }
 
-      // Use 50ml image as canonical product image (fallback chain)
-      const canonicalImage = urls['50ml'] || urls['20ml'] || urls['8ml'] || '/bottle.png';
+      // Use 100ml image as canonical product image (fallback chain)
+      const canonicalImage = urls['100ml'] || urls['50ml'] || urls['20ml'] || urls['8ml'] || '/bottle.png';
 
-      const p8  = Number(price8)  || 0;
-      const p20 = Number(price20) || 0;
-      const p50 = Number(price50) || 0;
-      const basePrice = p50 || p20 || p8;
+      const p8   = Number(price8)   || 0;
+      const p20  = Number(price20)  || 0;
+      const p50  = Number(price50)  || 0;
+      const p100 = Number(price100) || 0;
+      const basePrice = p100 || p50 || p20 || p8;
       const formattedPriceStr = new Intl.NumberFormat('en-IN', {
         minimumFractionDigits: 2, maximumFractionDigits: 2,
       }).format(basePrice);
@@ -123,13 +129,15 @@ const Admin = () => {
         type,
         price: basePrice,
         formattedPrice: formattedPriceStr,
-        price_8ml:  p8,
-        price_20ml: p20,
-        price_50ml: p50,
-        image:      canonicalImage,
-        image_8ml:  urls['8ml'],
-        image_20ml: urls['20ml'],
-        image_50ml: urls['50ml'],
+        price_8ml:    p8,
+        price_20ml:   p20,
+        price_50ml:   p50,
+        price_100ml:  p100,
+        image:        canonicalImage,
+        image_8ml:    urls['8ml'],
+        image_20ml:   urls['20ml'],
+        image_50ml:   urls['50ml'],
+        image_100ml:  urls['100ml'],
       };
 
       if (editingId) {
@@ -338,9 +346,10 @@ const Admin = () => {
                   Bottle Images — per size
                 </label>
                 <div style={{ display: 'flex', gap: '12px' }}>
-                  <ImageSlot size="8ml"  label="8ml"  />
-                  <ImageSlot size="20ml" label="20ml" />
-                  <ImageSlot size="50ml" label="50ml" />
+                  <ImageSlot size="8ml"   label="8ml"   />
+                  <ImageSlot size="20ml"  label="20ml"  />
+                  <ImageSlot size="50ml"  label="50ml"  />
+                  <ImageSlot size="100ml" label="100ml" />
                 </div>
               </div>
 
@@ -350,14 +359,14 @@ const Admin = () => {
                   Prices (₹) — per size
                 </label>
                 <div style={{ display: 'flex', gap: '12px' }}>
-                  {[['8ml', price8, setPrice8], ['20ml', price20, setPrice20], ['50ml', price50, setPrice50]].map(([label, val, setter]) => (
+                  {[['8ml', price8, setPrice8], ['20ml', price20, setPrice20], ['50ml', price50, setPrice50], ['100ml', price100, setPrice100]].map(([label, val, setter]) => (
                     <div key={label} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       <span style={{ fontSize: '0.72rem', color: 'var(--gray-dark)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
                       <input
                         type="number" min="0" step="1" value={val}
                         onChange={e => setter(e.target.value)}
                         style={{ padding: '10px 12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit', width: '100%', boxSizing: 'border-box' }}
-                        placeholder={label === '8ml' ? '1200' : label === '20ml' ? '2800' : '4500'}
+                        placeholder={label === '8ml' ? '1200' : label === '20ml' ? '2800' : label === '50ml' ? '4500' : '6500'}
                       />
                     </div>
                   ))}

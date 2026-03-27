@@ -17,7 +17,7 @@ const ProductCard = ({
   // Build sizes the same way as ProductModal — works for both static JS and Supabase data
   const derivedSizes = sizes?.length > 0
     ? sizes
-    : [8, 20, 50]
+    : [8, 20, 50, 100]
         .map(ml => {
           const p = rest[`price_${ml}ml`];
           if (!p) return null;

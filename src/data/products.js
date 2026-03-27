@@ -5,9 +5,10 @@ export const products = [
     type: "Eau de Parfum",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1200, image: "/bottle-8ml.png" },
-      { ml: 20, price: 2800, image: "/bottle-20ml.png" },
-      { ml: 50, price: 4500, image: "/bottle.png" },
+      { ml: 8,   price: 1200, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 2800, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 4500, image: "/bottle.png"        },
+      { ml: 100, price: 7500, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -16,9 +17,10 @@ export const products = [
     type: "Eau de Parfum",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1400, image: "/bottle-8ml.png" },
-      { ml: 20, price: 3200, image: "/bottle-20ml.png" },
-      { ml: 50, price: 5200, image: "/bottle.png" },
+      { ml: 8,   price: 1400, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 3200, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 5200, image: "/bottle.png"        },
+      { ml: 100, price: 8500, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -27,9 +29,10 @@ export const products = [
     type: "Eau de Parfum",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1300, image: "/bottle-8ml.png" },
-      { ml: 20, price: 3000, image: "/bottle-20ml.png" },
-      { ml: 50, price: 4800, image: "/bottle.png" },
+      { ml: 8,   price: 1300, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 3000, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 4800, image: "/bottle.png"        },
+      { ml: 100, price: 8000, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -38,9 +41,10 @@ export const products = [
     type: "Eau de Toilette",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 900, image: "/bottle-8ml.png" },
-      { ml: 20, price: 2200, image: "/bottle-20ml.png" },
-      { ml: 50, price: 3500, image: "/bottle.png" },
+      { ml: 8,   price: 900,  image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 2200, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 3500, image: "/bottle.png"        },
+      { ml: 100, price: 6000, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -49,9 +53,10 @@ export const products = [
     type: "Eau de Parfum",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1500, image: "/bottle-8ml.png" },
-      { ml: 20, price: 3400, image: "/bottle-20ml.png" },
-      { ml: 50, price: 5500, image: "/bottle.png" },
+      { ml: 8,   price: 1500, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 3400, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 5500, image: "/bottle.png"        },
+      { ml: 100, price: 9000, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -60,9 +65,10 @@ export const products = [
     type: "Eau de Parfum",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1100, image: "/bottle-8ml.png" },
-      { ml: 20, price: 2600, image: "/bottle-20ml.png" },
-      { ml: 50, price: 4200, image: "/bottle.png" },
+      { ml: 8,   price: 1100, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 2600, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 4200, image: "/bottle.png"        },
+      { ml: 100, price: 7000, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -71,9 +77,10 @@ export const products = [
     type: "Eau de Parfum",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1350, image: "/bottle-8ml.png" },
-      { ml: 20, price: 3100, image: "/bottle-20ml.png" },
-      { ml: 50, price: 4900, image: "/bottle.png" },
+      { ml: 8,   price: 1350, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 3100, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 4900, image: "/bottle.png"        },
+      { ml: 100, price: 8200, image: "/bottle-100ml.png" },
     ],
   },
   {
@@ -82,9 +89,10 @@ export const products = [
     type: "Eau de Toilette",
     image: "/bottle.png",
     sizes: [
-      { ml: 8, price: 1000, image: "/bottle-8ml.png" },
-      { ml: 20, price: 2400, image: "/bottle-20ml.png" },
-      { ml: 50, price: 3800, image: "/bottle.png" },
+      { ml: 8,   price: 1000, image: "/bottle-8ml.png"   },
+      { ml: 20,  price: 2400, image: "/bottle-20ml.png"  },
+      { ml: 50,  price: 3800, image: "/bottle.png"        },
+      { ml: 100, price: 6500, image: "/bottle-100ml.png" },
     ],
   },
 ];

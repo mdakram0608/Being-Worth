@@ -14,7 +14,7 @@ const ProductModal = ({ product, onClose }) => {
   const sizes = product?.sizes?.length > 0
     ? product.sizes
     // Build from flat Supabase columns (price_8ml / price_20ml / price_50ml / image_Xml)
-    : [8, 20, 50]
+    : [8, 20, 50, 100]
         .map(ml => {
           const p = product[`price_${ml}ml`];
           if (!p) return null;
