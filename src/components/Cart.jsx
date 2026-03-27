@@ -11,7 +11,8 @@ const Cart = () => {
     let message = "Hello Being Worth! I would like to place an order:%0A%0A";
     
     cartItems.forEach(item => {
-      message += `${item.quantity}x ${item.name} (${item.type}) - ₹${item.formattedPrice}%0A`;
+      const sizePart = item.size ? ` ${item.size}` : '';
+      message += `${item.quantity}x ${item.name}${sizePart} (${item.type}) - ₹${item.formattedPrice} each%0A`;
     });
     
     // Format total price with commas
