@@ -116,7 +116,7 @@ const Search = () => {
            ) : (
              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '32px' }}>
                 {filteredProducts.map(product => (
-                  <div key={product.id} onClick={() => setIsSearchOpen(false)}>
+                  <div key={product.id}>
                     <ProductCard {...product} />
                   </div>
                 ))}
