@@ -67,7 +67,7 @@ const Home = () => {
             </a>
           </div>
           
-          <div style={{
+          <div className="product-grid" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
             gap: '32px'

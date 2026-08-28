@@ -11,6 +11,7 @@ const Admin = () => {
   // Form State — text fields
   const [name, setName] = useState('');
   const [type, setType] = useState('Eau de Parfum');
+  const [description, setDescription] = useState('');
   const [price8, setPrice8] = useState('');
   const [price20, setPrice20] = useState('');
   const [price50, setPrice50] = useState('');
@@ -46,6 +47,7 @@ const Admin = () => {
     setEditingId(null);
     setName('');
     setType('Eau de Parfum');
+    setDescription('');
     setPrice8(''); setPrice20(''); setPrice50(''); setPrice100('');
     setImgs({
       '8ml':   { file: null, preview: '' },
@@ -60,6 +62,7 @@ const Admin = () => {
       setEditingId(product.id);
       setName(product.name);
       setType(product.type);
+      setDescription(product.description ?? '');
       setPrice8((product.price_8ml ?? '').toString());
       setPrice20((product.price_20ml ?? '').toString());
       setPrice50((product.price_50ml ?? product.price ?? '').toString());
@@ -127,6 +130,7 @@ const Admin = () => {
       const productData = {
         name,
         type,
+        description: description.trim() || null,
         price: basePrice,
         formattedPrice: formattedPriceStr,
         price_8ml:    p8,
@@ -338,6 +342,20 @@ const Admin = () => {
                   <option value="Eau de Toilette">Eau de Toilette</option>
                   <option value="Cologne">Cologne</option>
                 </select>
+              </div>
+
+              {/* Description */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Description <span style={{ color: 'var(--gray-dark)', textTransform: 'none', letterSpacing: 0 }}>(optional)</span>
+                </label>
+                <textarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  rows={4}
+                  style={{ padding: '12px', border: '1px solid var(--gray-light)', outline: 'none', fontFamily: 'inherit', resize: 'vertical' }}
+                  placeholder="Describe the fragrance — notes, character, occasion..."
+                />
               </div>
 
               {/* Per-size images */}

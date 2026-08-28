@@ -114,7 +114,7 @@ const Search = () => {
                No results found for "{query}"
              </p>
            ) : (
-             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '32px' }}>
+             <div className="product-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '32px' }}>
                 {filteredProducts.map(product => (
                   <div key={product.id}>
                     <ProductCard {...product} />

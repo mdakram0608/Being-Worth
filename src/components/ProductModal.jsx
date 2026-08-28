@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ShoppingBag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
@@ -46,8 +47,16 @@ const ProductModal = ({ product, onClose }) => {
     }
   }, [selected, product]);
 
-  // No body-scroll lock needed — backdrop prevents page interaction
-  // and locking body overflow can block scrolling inside fixed containers on some browsers
+  // Lock background page scroll while the modal is open, so only the
+  // modal card scrolls. The modal is portaled to <body>, so it stays
+  // centered in the viewport regardless of scroll position.
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
 
   if (!product) return null;
 
@@ -71,7 +80,7 @@ const ProductModal = ({ product, onClose }) => {
   const bottleScales = [0.72, 0.86, 1];
   const scale = bottleScales[safeIndex] ?? bottleScales[sizes.length - 1] ?? 1;
 
-  return (
+  return createPortal(
     <>
       {/* Backdrop */}
       <div
@@ -208,6 +217,19 @@ const ProductModal = ({ product, onClose }) => {
               ₹ {formattedPrice}
             </p>
 
+            {/* Description — only rendered when the product has one */}
+            {product.description?.trim() && (
+              <p style={{
+                fontSize: '0.9rem',
+                lineHeight: 1.7,
+                color: 'var(--gray-dark)',
+                marginBottom: '32px',
+                whiteSpace: 'pre-line',
+              }}>
+                {product.description}
+              </p>
+            )}
+
             {/* Size selector */}
             <div style={{ marginBottom: '32px' }}>
               <p style={{
@@ -307,7 +329,8 @@ const ProductModal = ({ product, onClose }) => {
           }
         }
       `}</style>
-    </>
+    </>,
+    document.body
   );
 };
 
