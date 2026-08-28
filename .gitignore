@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Design source files (not web assets)
+*.cdr
+*.cdr.zip

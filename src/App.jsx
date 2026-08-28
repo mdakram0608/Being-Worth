@@ -24,7 +24,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/collection" element={<Collection />} />
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/adminakbw007" element={<Admin />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/soaps" element={<Soaps />} />
             </Routes>
